@@ -1,0 +1,91 @@
+syntax = "proto2";
+
+package encapp;
+
+message Common {
+  optional string id = 1;
+  optional string description = 2;
+  optional string operation = 3;
+  optional string start = 4;
+}
+
+message Input {
+  optional string filepath = 1;
+  optional string resolution = 2;
+  enum PixFmt {
+    yuv420p = 0;
+    nv12 = 1;
+  }
+  optional PixFmt pix_fmt = 3;
+  optional int32 framerate = 4;
+  optional string duration = 5;
+  repeated int32 drop = 6;
+  message FrameRate {
+    optional int32 framenum = 1;
+    optional int32 framerate = 2;
+  }
+  repeated FrameRate dynamic_framerate = 7;
+}
+
+message Configure {
+  message Parameter {
+    optional string key = 1;
+    optional string value = 2;
+  }
+  repeated Parameter parameter = 1;
+  // known shortcuts
+  optional string codec = 2;
+  optional string bitrate = 3;
+  enum BitrateMode {
+    cq = 0;
+    vbr = 1;
+    cbr = 2;
+    cbr_fd = 3;
+  }
+  optional BitrateMode bitrate_mode = 4;
+  optional uint64 durationUs = 5;
+  optional string resolution = 6;
+  optional string color_format = 7;
+  optional string color_standard = 8;
+  optional string color_range = 9;
+  optional string color_transfer = 10;
+  optional string color_transfer_request = 11;
+  optional int32 frame_rate = 12;
+  optional int32 i_frame_interval = 13;
+  optional int32 intra_refresh_period = 14;
+  optional int32 latency = 15;
+  optional int64 repeat_previous_frame_after = 16;
+  optional string ts_schema = 17;
+}
+
+message Runtime {
+  message Parameter {
+    optional int64 framenum = 1;
+    optional string key = 2;
+    optional string value = 3;
+  }
+  repeated Parameter parameter = 1;
+  // known shortcuts
+  optional string video_bitrate = 2;
+}
+
+message Parallel {
+  repeated Test test = 1;
+}
+
+message Serial {
+  repeated Test test = 1;
+}
+
+message Test {
+  optional Common common = 1;
+  optional Input input = 2;
+  optional Configure configure = 3;
+  optional Runtime runtime = 4;
+  optional Parallel parallel = 5;
+  optional Serial serial = 6;
+}
+
+message Tests {
+  optional Test test = 1;
+}
